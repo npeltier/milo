@@ -1,7 +1,7 @@
 .marquee {
   position: relative;
   color: var(--color-white);
-  display: flex;
+  display: block;
 }
 
 .marquee.large.standard {
