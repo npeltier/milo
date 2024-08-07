@@ -7,8 +7,6 @@ import {
     WcsCommitment,
     WcsPlanType,
     WcsTerm,
-    applyPlanType,
-    webCommerceArtifact,
 } from './external.js';
 import { Log } from './log.js';
 
@@ -36,13 +34,6 @@ export function Wcs({ settings }) {
     const log = Log.module('wcs');
     const { env, domainSwitch, wcsApiKey: apiKey } = settings;
     const baseUrl = domainSwitch ? WcsBaseUrl[env + ACOM] : WcsBaseUrl[env];
-    // Create @pandora Wcs client.
-    const fetchOptions = {
-        apiKey,
-        baseUrl,
-        fetch: window.fetch.bind(window),
-    };
-    const getWcsOffers = webCommerceArtifact(fetchOptions);
 
     /**
      * Cache of promises resolving to arrays of Wcs offers grouped by osi-based keys.
@@ -72,34 +63,27 @@ export function Wcs({ settings }) {
         try {
             log.debug('Fetching:', options);
             options.offerSelectorIds = options.offerSelectorIds.sort();
-            const { data } = await getWcsOffers(
-                options,
-                {
-                    apiKey,
-                    environment: settings.wcsEnv,
-                    // @ts-ignore
-                    landscape: env === Env.STAGE ? 'ALL' : settings.landscape,
-                },
-                ({ resolvedOffers }) => ({
-                    offers: resolvedOffers.map(applyPlanType),
-                }),
-            );
-            log.debug('Fetched:', options, data);
-            const { offers } = data ?? {};
-            // resolve all promises that have offers
-            promises.forEach(({ resolve }, offerSelectorId) => {
-                // select offers with current OSI
-                const resolved = offers
-                    .filter(({ offerSelectorIds }) =>
-                        offerSelectorIds.includes(offerSelectorId),
-                    )
-                    .flat();
-                // resolve current promise if at least 1 offer is present
-                if (resolved.length) {
-                    promises.delete(offerSelectorId);
-                    resolve(resolved);
-                }
-            });
+            const url = `${baseUrl}/web_commerce_artifact?offer_selector_ids=${options.offerSelectorIds}&country=${options.country}&language=${options.language}&locale=${options.locale}&api_key=${apiKey}&landscape=${env === Env.STAGE ? 'ALL' : settings.landscape}`;
+            const response = await fetch(url);
+            if (response.ok) {            
+              const { data } = await response.json();
+              log.debug('Fetched:', options, data);
+              const { offers } = data ?? {};
+              // resolve all promises that have offers
+              promises.forEach(({ resolve }, offerSelectorId) => {
+                  // select offers with current OSI
+                  const resolved = offers
+                      .filter(({ offerSelectorIds }) =>
+                          offerSelectorIds.includes(offerSelectorId),
+                      )
+                      .flat();
+                  // resolve current promise if at least 1 offer is present
+                  if (resolved.length) {
+                      promises.delete(offerSelectorId);
+                      resolve(resolved);
+                  }
+              });  
+            }
         } catch (error) {
             // in case of 404 WCS error caused by a request with multiple osis,
             // fallback to `fetch-by-one` strategy
