@@ -1,6 +1,7 @@
 import { html, LitElement, nothing } from 'lit';
 import { sizeStyles, styles } from './merch-card.css.js';
 import { isMobile, isMobileOrTablet } from './utils.js';
+import { renderVariant } from './variants/index.js';
 
 import './global.css.js';
 import {
@@ -128,6 +129,10 @@ export class MerchCard extends LitElement {
               this.removeEmptyRows();
             }
         });
+    }
+
+    render() {
+      return renderVariant(this);
     }
 
     get computedBorderStyle() {
@@ -320,57 +325,6 @@ export class MerchCard extends LitElement {
 
     includes(text) {
         return this.textContent.match(new RegExp(text, 'i')) !== null;
-    }
-
-    render() {
-        if (!this.isConnected || this.style.display === 'none') return;
-        switch (this.variant) {
-            case 'special-offers':
-                return this.renderSpecialOffer();
-            case 'segment':
-                return this.renderSegment();
-            case 'plans':
-                return this.renderPlans();
-            case 'catalog':
-                return this.renderCatalog();
-            case 'image':
-                return this.renderImage();
-            case 'product':
-                return this.renderProduct();
-            case 'inline-heading':
-                return this.renderInlineHeading();
-            case MINI_COMPARE_CHART:
-                return this.renderMiniCompareChart();
-            case 'ccd-action':
-                return this.renderCcdAction();
-            case 'twp':
-                return this.renderTwp();
-            default:
-                // this line should never hit, to check.
-                return this.renderProduct();
-        }
-    }
-
-    renderSpecialOffer() {
-        return html`${this.cardImage}
-            <div class="body">
-                <slot name="detail-m"></slot>
-                <slot name="heading-xs"></slot>
-                <slot name="body-xs"></slot>
-            </div>
-            ${this.evergreen
-                ? html`
-                      <div
-                          class="detail-bg-container"
-                          style="background: ${this['detailBg']}"
-                      >
-                          <slot name="detail-bg"></slot>
-                      </div>
-                  `
-                : html`
-                      <hr />
-                      ${this.secureLabelFooter}
-                  `}`;
     }
 
     get promoBottom() {
