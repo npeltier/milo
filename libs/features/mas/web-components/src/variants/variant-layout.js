@@ -10,7 +10,7 @@ export class VariantLayout {
       VariantLayout.styleMap[this.card.variant] = true;
       const styles = document.createElement('style');
       styles.innerHTML = this.getGlobalCSS();
-      document.head.appendChild(styles);      
+      setTimeout(() => document.head.appendChild(styles), 1);   
     }
   }
 
