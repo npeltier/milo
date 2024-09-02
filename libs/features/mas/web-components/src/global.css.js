@@ -1,3 +1,4 @@
+import  { getVariantGlobalCss } from './variants/variants.js';
 const styles = document.createElement('style');
 
 styles.innerHTML = `
@@ -349,5 +350,6 @@ body.merch-modal {
     scrollbar-gutter: stable;
     height: 100vh;
 }
+${getVariantGlobalCss()}
 `;
 document.head.appendChild(styles);

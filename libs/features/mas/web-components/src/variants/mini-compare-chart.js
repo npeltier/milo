@@ -20,7 +20,7 @@ export class MiniCompareChart extends VariantLayout {
     return this.#container;
   }
 
-  getGlobalCSS() {
+  static getGlobalCSS() {
     return CSS;
   }
 

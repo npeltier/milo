@@ -66,7 +66,7 @@ export class Catalog extends VariantLayout {
     actionMenuContentSlot.classList.toggle('hidden', retract);
   }
 
-  getGlobalCSS() {
+  static getGlobalCSS() {
     return CSS;
   }
 

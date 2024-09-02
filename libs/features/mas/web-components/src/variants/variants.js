@@ -48,4 +48,13 @@ const getVariantStyles = () => {
   return styles;
 }
 
-export { getVariantLayout, getVariantStyles };
+const getVariantGlobalCss = () => {
+  return `
+    ${Catalog.getGlobalCSS()}${CCDAction.getGlobalCSS()}${Image.getGlobalCSS()}
+    ${InlineHeading.getGlobalCSS()}${MiniCompareChart.getGlobalCSS()}
+    ${Plans.getGlobalCSS()}${Product.getGlobalCSS()}${Segment.getGlobalCSS()}
+    ${SpecialOffer.getGlobalCSS()}${TWP.getGlobalCSS()}
+  `;
+}
+
+export { getVariantLayout, getVariantStyles, getVariantGlobalCss };

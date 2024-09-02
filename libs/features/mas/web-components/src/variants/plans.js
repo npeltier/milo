@@ -7,7 +7,7 @@ export class Plans extends VariantLayout {
     super(card);
   }
 
-  getGlobalCSS() {
+  static getGlobalCSS() {
     return CSS;
   }
   

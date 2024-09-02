@@ -2329,8 +2329,8 @@ function isTopLayer(element) {
 }
 function isContainingBlock(element) {
   const webkit = isWebKit();
-  const css2 = getComputedStyle(element);
-  return css2.transform !== "none" || css2.perspective !== "none" || (css2.containerType ? css2.containerType !== "normal" : false) || !webkit && (css2.backdropFilter ? css2.backdropFilter !== "none" : false) || !webkit && (css2.filter ? css2.filter !== "none" : false) || ["transform", "perspective", "filter"].some((value) => (css2.willChange || "").includes(value)) || ["paint", "layout", "strict", "content"].some((value) => (css2.contain || "").includes(value));
+  const css9 = getComputedStyle(element);
+  return css9.transform !== "none" || css9.perspective !== "none" || (css9.containerType ? css9.containerType !== "normal" : false) || !webkit && (css9.backdropFilter ? css9.backdropFilter !== "none" : false) || !webkit && (css9.filter ? css9.filter !== "none" : false) || ["transform", "perspective", "filter"].some((value) => (css9.willChange || "").includes(value)) || ["paint", "layout", "strict", "content"].some((value) => (css9.contain || "").includes(value));
 }
 function getContainingBlock(element) {
   let currentNode = getParentNode(element);
@@ -2414,9 +2414,9 @@ var init_floating_ui_utils_dom = __esm({
 
 // ../node_modules/@floating-ui/dom/dist/floating-ui.dom.mjs
 function getCssDimensions(element) {
-  const css2 = getComputedStyle(element);
-  let width = parseFloat(css2.width) || 0;
-  let height = parseFloat(css2.height) || 0;
+  const css9 = getComputedStyle(element);
+  let width = parseFloat(css9.width) || 0;
+  let height = parseFloat(css9.height) || 0;
   const hasOffset = isHTMLElement(element);
   const offsetWidth = hasOffset ? element.offsetWidth : width;
   const offsetHeight = hasOffset ? element.offsetHeight : height;
@@ -2509,9 +2509,9 @@ function getBoundingClientRect(element, includeScale, isFixedStrategy, offsetPar
     while (currentIFrame && offsetParent && offsetWin !== currentWin) {
       const iframeScale = getScale(currentIFrame);
       const iframeRect = currentIFrame.getBoundingClientRect();
-      const css2 = getComputedStyle(currentIFrame);
-      const left = iframeRect.left + (currentIFrame.clientLeft + parseFloat(css2.paddingLeft)) * iframeScale.x;
-      const top = iframeRect.top + (currentIFrame.clientTop + parseFloat(css2.paddingTop)) * iframeScale.y;
+      const css9 = getComputedStyle(currentIFrame);
+      const left = iframeRect.left + (currentIFrame.clientLeft + parseFloat(css9.paddingLeft)) * iframeScale.x;
+      const top = iframeRect.top + (currentIFrame.clientTop + parseFloat(css9.paddingTop)) * iframeScale.y;
       x2 *= iframeScale.x;
       y2 *= iframeScale.y;
       width *= iframeScale.x;
@@ -2574,15 +2574,15 @@ function getWindowScrollBarX(element) {
   return getBoundingClientRect(getDocumentElement(element)).left + getNodeScroll(element).scrollLeft;
 }
 function getDocumentRect(element) {
-  const html2 = getDocumentElement(element);
+  const html13 = getDocumentElement(element);
   const scroll = getNodeScroll(element);
   const body = element.ownerDocument.body;
-  const width = max(html2.scrollWidth, html2.clientWidth, body.scrollWidth, body.clientWidth);
-  const height = max(html2.scrollHeight, html2.clientHeight, body.scrollHeight, body.clientHeight);
+  const width = max(html13.scrollWidth, html13.clientWidth, body.scrollWidth, body.clientWidth);
+  const height = max(html13.scrollHeight, html13.clientHeight, body.scrollHeight, body.clientHeight);
   let x2 = -scroll.scrollLeft + getWindowScrollBarX(element);
   const y2 = -scroll.scrollTop;
   if (getComputedStyle(body).direction === "rtl") {
-    x2 += max(html2.clientWidth, body.clientWidth) - width;
+    x2 += max(html13.clientWidth, body.clientWidth) - width;
   }
   return {
     width,
@@ -2593,10 +2593,10 @@ function getDocumentRect(element) {
 }
 function getViewportRect(element, strategy) {
   const win = getWindow(element);
-  const html2 = getDocumentElement(element);
+  const html13 = getDocumentElement(element);
   const visualViewport = win.visualViewport;
-  let width = html2.clientWidth;
-  let height = html2.clientHeight;
+  let width = html13.clientWidth;
+  let height = html13.clientHeight;
   let x2 = 0;
   let y2 = 0;
   if (visualViewport) {
@@ -3631,7 +3631,7 @@ var init_sp_overlay = __esm({
 });
 
 // src/plans-modal.js
-import { LitElement, html } from "/libs/deps/lit-all.min.js";
+import { LitElement, html as html12 } from "/libs/deps/lit-all.min.js";
 
 // ../node_modules/@spectrum-web-components/theme/src/theme-light.css.js
 init_src();
@@ -4999,6 +4999,1447 @@ var MatchMediaController = class {
   }
 };
 
+// src/variants/variant-layout.js
+import { html } from "/libs/deps/lit-all.min.js";
+var VariantLayout = class {
+  static styleMap = {};
+  card;
+  constructor(card) {
+    this.card = card;
+  }
+  get badge() {
+    let additionalStyles;
+    if (!this.card.badgeBackgroundColor || !this.card.badgeColor || !this.card.badgeText) {
+      return;
+    }
+    if (this.evergreen) {
+      additionalStyles = `border: 1px solid ${this.card.badgeBackgroundColor}; border-right: none;`;
+    }
+    return html`
+        <div
+            id="badge"
+            class="${this.card.variant}-badge"
+            style="background-color: ${this.card.badgeBackgroundColor};
+                color: ${this.card.badgeColor};
+                ${additionalStyles}"
+        >
+            ${this.card.badgeText}
+        </div>
+    `;
+  }
+  get cardImage() {
+    return html` <div class="image">
+        <slot name="bg-image"></slot>
+        ${this.badge}
+    </div>`;
+  }
+  get evergreen() {
+    return this.card.classList.contains("intro-pricing");
+  }
+  get promoBottom() {
+    return this.card.classList.contains("promo-bottom");
+  }
+  get secureLabelFooter() {
+    const secureLabel = this.card.secureLabel ? html`<span class="secure-transaction-label"
+              >${this.card.secureLabel}</span
+          >` : "";
+    return html`<footer>${secureLabel}<slot name="footer"></slot></footer>`;
+  }
+  async adjustTitleWidth() {
+    const cardWidth = this.card.getBoundingClientRect().width;
+    const badgeWidth = this.card.badgeElement?.getBoundingClientRect().width || 0;
+    if (cardWidth === 0 || badgeWidth === 0)
+      return;
+    this.card.style.setProperty(
+      "--consonant-merch-card-heading-xs-max-width",
+      `${Math.round(cardWidth - badgeWidth - 16)}px`
+      // consonant-merch-spacing-xs
+    );
+  }
+  postCardUpdateHook() {
+  }
+  connectedCallbackHook() {
+  }
+  disconnectedCallbackHook() {
+  }
+  renderLayout() {
+  }
+};
+
+// src/variants/catalog.js
+import { html as html2, css } from "/libs/deps/lit-all.min.js";
+
+// src/constants.js
+var EVENT_MERCH_CARD_ACTION_MENU_TOGGLE = "merch-card:action-menu-toggle";
+
+// src/utils.js
+function isMobile() {
+  return window.matchMedia("(max-width: 767px)").matches;
+}
+function isMobileOrTablet() {
+  return window.matchMedia("(max-width: 1024px)").matches;
+}
+
+// src/media.js
+var MOBILE_LANDSCAPE = "(max-width: 767px)";
+var TABLET_DOWN = "(max-width: 1199px)";
+var TABLET_UP = "(min-width: 768px)";
+var DESKTOP_UP = "(min-width: 1200px)";
+var LARGE_DESKTOP = "(min-width: 1600px)";
+
+// src/variants/catalog.css.js
+var CSS2 = `
+:root {
+  --consonant-merch-card-catalog-width: 276px;
+  --consonant-merch-card-catalog-icon-size: 40px;
+}
+.one-merch-card.catalog,
+.two-merch-cards.catalog,
+.three-merch-cards.catalog,
+.four-merch-cards.catalog {
+    grid-template-columns: var(--consonant-merch-card-catalog-width);
+}
+
+@media screen and ${TABLET_UP} {
+    :root {
+      --consonant-merch-card-catalog-width: 302px;
+    }
+
+    .two-merch-cards.catalog,
+    .three-merch-cards.catalog,
+    .four-merch-cards.catalog {
+        grid-template-columns: repeat(2, var(--consonant-merch-card-catalog-width));
+    }
+}
+
+@media screen and ${DESKTOP_UP} {
+    :root {
+      --consonant-merch-card-catalog-width: 276px;
+    }
+    .three-merch-cards.catalog,
+    .four-merch-cards.catalog {
+        grid-template-columns: repeat(3, var(--consonant-merch-card-catalog-width));
+    }
+}
+
+@media screen and ${LARGE_DESKTOP} {
+    .four-merch-cards.catalog {
+        grid-template-columns: repeat(4, var(--consonant-merch-card-catalog-width));
+    }
+}
+
+merch-card[variant="catalog"] [slot="action-menu-content"] {
+  background-color: #000;
+  color: var(--color-white, #fff);
+  font-size: var(--consonant-merch-card-body-xs-font-size);
+  width: fit-content;
+  padding: var(--consonant-merch-spacing-xs);
+  border-radius: var(--consonant-merch-spacing-xxxs);
+  position: absolute;
+  top: 55px;
+  right: 15px;
+  line-height: var(--consonant-merch-card-body-line-height);
+}
+
+merch-card[variant="catalog"] [slot="action-menu-content"] ul {
+  padding-left: 0;
+  padding-bottom: var(--consonant-merch-spacing-xss);
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-position: inside;
+  list-style-type: '\u2022 ';
+}
+
+merch-card[variant="catalog"] [slot="action-menu-content"] ul li {
+  padding-left: 0;
+  line-height: var(--consonant-merch-card-body-line-height);
+}
+
+merch-card[variant="catalog"] [slot="action-menu-content"] ::marker {
+  margin-right: 0;
+}
+
+merch-card[variant="catalog"] [slot="action-menu-content"] p {
+  color: var(--color-white, #fff);
+}
+
+merch-card[variant="catalog"] [slot="action-menu-content"] a {
+  color: var(--consonant-merch-card-background-color);
+  text-decoration: underline;
+}
+
+merch-card[variant="catalog"] .payment-details {
+  font-size: var(--consonant-merch-card-body-font-size);
+  font-style: italic;
+  font-weight: 400;
+  line-height: var(--consonant-merch-card-body-line-height);
+}`;
+
+// src/variants/catalog.js
+var Catalog = class extends VariantLayout {
+  constructor(card) {
+    super(card);
+  }
+  renderLayout() {
+    return html2` <div class="body">
+        <div class="top-section">
+            <slot name="icons"></slot> ${this.badge}
+            <div
+                class="action-menu
+                ${isMobileOrTablet() && this.card.actionMenu ? "always-visible" : ""}
+                ${!this.card.actionMenu ? "hidden" : "invisible"}"
+                @click="${this.card.toggleActionMenu}"
+            ></div>
+        </div>
+        <slot
+            name="action-menu-content"
+            class="action-menu-content
+            ${!this.card.actionMenuContent ? "hidden" : ""}"
+            >${this.card.actionMenuContent}</slot
+        >
+        <slot name="heading-xs"></slot>
+        <slot name="heading-m"></slot>
+        <slot name="body-xxs"></slot>
+        ${!this.promoBottom ? html2`<slot name="promo-text"></slot
+                  ><slot name="callout-content"></slot>` : ""}
+        <slot name="body-xs"></slot>
+        ${this.promoBottom ? html2`<slot name="promo-text"></slot
+                  ><slot name="callout-content"></slot>` : ""}
+    </div>
+    ${this.secureLabelFooter}`;
+  }
+  toggleActionMenu(e16) {
+    const retract = e16?.type === "mouseleave" ? true : void 0;
+    const actionMenuContentSlot = this.shadowRoot.querySelector(
+      'slot[name="action-menu-content"]'
+    );
+    if (!actionMenuContentSlot)
+      return;
+    if (!retract) {
+      this.card.dispatchEvent(
+        new CustomEvent(EVENT_MERCH_CARD_ACTION_MENU_TOGGLE, {
+          bubbles: true,
+          composed: true,
+          detail: {
+            card: this.name,
+            type: "action-menu"
+          }
+        })
+      );
+    }
+    actionMenuContentSlot.classList.toggle("hidden", retract);
+  }
+  static getGlobalCSS() {
+    return CSS2;
+  }
+  connectedCallbackHook() {
+    this.card.addEventListener("mouseleave", this.toggleActionMenu);
+  }
+  disconnectedCallbackHook() {
+    this.card.removeEventListener("mouseleave", this.toggleActionMenu);
+  }
+  static variantStyle = css`
+    :host([variant='catalog']) {
+      min-height: 330px;
+    }
+
+    .body .catalog-badge {
+      display: flex;
+      height: fit-content;
+      flex-direction: column;
+      width: fit-content;
+      max-width: 140px;
+      border-radius: 5px;
+      position: relative;
+      top: 0;
+      margin-left: var(--consonant-merch-spacing-xxs);
+      box-sizing: border-box;
+    }
+  `;
+};
+
+// src/variants/ccd-action.js
+import { html as html3, css as css2 } from "/libs/deps/lit-all.min.js";
+
+// src/variants/ccd-action.css.js
+var CSS3 = `
+:root {
+  --consonant-merch-card-ccd-action-width: 276px;
+  --consonant-merch-card-ccd-action-min-height: 320px;
+}
+
+.one-merch-card.ccd-action,
+.two-merch-cards.ccd-action,
+.three-merch-cards.ccd-action,
+.four-merch-cards.ccd-action {
+    grid-template-columns: var(--consonant-merch-card-ccd-action-width);
+}
+
+merch-card[variant="ccd-action"] .price-strikethrough {
+    font-size: 18px;
+}
+
+@media screen and ${TABLET_UP} {
+  .two-merch-cards.ccd-action,
+  .three-merch-cards.ccd-action,
+  .four-merch-cards.ccd-action {
+      grid-template-columns: repeat(2, var(--consonant-merch-card-ccd-action-width));
+  }
+}
+
+@media screen and ${DESKTOP_UP} {
+  .three-merch-cards.ccd-action,
+  .four-merch-cards.ccd-action {
+      grid-template-columns: repeat(3, var(--consonant-merch-card-ccd-action-width));
+  }
+}
+
+@media screen and ${LARGE_DESKTOP} {
+  .four-merch-cards.ccd-action {
+      grid-template-columns: repeat(4, var(--consonant-merch-card-ccd-action-width));
+  }
+}
+`;
+
+// src/variants/ccd-action.js
+var CCDAction = class extends VariantLayout {
+  constructor(card) {
+    super(card);
+  }
+  static getGlobalCSS() {
+    return CSS3;
+  }
+  renderLayout() {
+    return html3` <div class="body">
+        <slot name="icons"></slot> ${this.badge}
+        <slot name="heading-xs"></slot>
+        <slot name="heading-m"></slot>
+        ${this.promoBottom ? html3`<slot name="body-xs"></slot><slot name="promo-text"></slot>` : html3`<slot name="promo-text"></slot><slot name="body-xs"></slot>`}
+        <footer><slot name="footer"></slot></footer>
+        ${this.defaultSlot}
+    </div>`;
+  }
+  static variantStyle = css2`
+    :host([variant='ccd-action']:not([size])) {
+      width: var(--consonant-merch-card-ccd-action-width);
+    }
+  `;
+};
+
+// src/variants/image.js
+import { html as html4 } from "/libs/deps/lit-all.min.js";
+
+// src/variants/image.css.js
+var CSS4 = `
+:root {
+  --consonant-merch-card-image-width: 300px;
+  --consonant-merch-card-image-height: 180px;
+}
+
+.one-merch-card.image,
+.two-merch-cards.image,
+.three-merch-cards.image,
+.four-merch-cards.image {
+  grid-template-columns: var(--consonant-merch-card-image-width);
+}
+
+@media screen and ${TABLET_UP} {
+  .two-merch-cards.image,
+  .three-merch-cards.image,
+  .four-merch-cards.image {
+      grid-template-columns: repeat(2, var(--consonant-merch-card-image-width));
+  }
+}
+
+@media screen and ${DESKTOP_UP} {
+  :root {
+    --consonant-merch-card-image-width: 378px;
+  }
+  .three-merch-cards.image,
+  .four-merch-cards.image {
+      grid-template-columns: repeat(3, var(--consonant-merch-card-image-width));
+  }
+}
+
+@media screen and ${LARGE_DESKTOP} {
+  .four-merch-cards.image {
+      grid-template-columns: repeat(4, var(--consonant-merch-card-image-width));
+  }
+}
+`;
+
+// src/variants/image.js
+var Image = class extends VariantLayout {
+  constructor(card) {
+    super(card);
+  }
+  static getGlobalCSS() {
+    return CSS4;
+  }
+  renderLayout() {
+    return html4`${this.cardImage}
+    <div class="body">
+        <slot name="icons"></slot>
+        <slot name="heading-xs"></slot>
+        <slot name="body-xxs"></slot>
+        ${this.promoBottom ? html4`<slot name="body-xs"></slot><slot name="promo-text"></slot>` : html4`<slot name="promo-text"></slot><slot name="body-xs"></slot>`}
+    </div>
+    ${this.evergreen ? html4`
+              <div
+                  class="detail-bg-container"
+                  style="background: ${this.card["detailBg"]}"
+              >
+                  <slot name="detail-bg"></slot>
+              </div>
+          ` : html4`
+              <hr />
+              ${this.secureLabelFooter}
+          `}`;
+  }
+};
+
+// src/variants/inline-heading.js
+import { html as html5 } from "/libs/deps/lit-all.min.js";
+
+// src/variants/inline-heading.css.js
+var CSS5 = `
+:root {
+  --consonant-merch-card-inline-heading-width: 300px;
+}
+
+.one-merch-card.inline-heading,
+.two-merch-cards.inline-heading,
+.three-merch-cards.inline-heading,
+.four-merch-cards.inline-heading {
+    grid-template-columns: var(--consonant-merch-card-inline-heading-width);
+}
+
+@media screen and ${TABLET_UP} {
+  .two-merch-cards.inline-heading,
+  .three-merch-cards.inline-heading,
+  .four-merch-cards.inline-heading {
+      grid-template-columns: repeat(2, var(--consonant-merch-card-inline-heading-width));
+  }
+}
+
+@media screen and ${DESKTOP_UP} {
+  --consonant-merch-card-inline-heading-width: 378px;
+
+  .three-merch-cards.inline-heading,
+  .four-merch-cards.inline-heading {
+      grid-template-columns: repeat(3, var(--consonant-merch-card-inline-heading-width));
+  }
+}
+
+@media screen and ${LARGE_DESKTOP} {
+  .four-merch-cards.inline-heading {
+      grid-template-columns: repeat(4, var(--consonant-merch-card-inline-heading-width));
+  }
+}
+`;
+
+// src/variants/inline-heading.js
+var InlineHeading = class extends VariantLayout {
+  constructor(card) {
+    super(card);
+  }
+  static getGlobalCSS() {
+    return CSS5;
+  }
+  renderLayout() {
+    return html5` ${this.badge}
+    <div class="body">
+        <div class="top-section">
+            <slot name="icons"></slot>
+            <slot name="heading-xs"></slot>
+        </div>
+        <slot name="body-xs"></slot>
+    </div>
+    ${!this.card.customHr ? html5`<hr />` : ""} ${this.secureLabelFooter}`;
+  }
+};
+
+// src/variants/mini-compare-chart.js
+import { html as html6, css as css3, unsafeCSS } from "/libs/deps/lit-all.min.js";
+
+// src/variants/mini-compare-chart.css.js
+var CSS6 = `
+  :root {
+    --consonant-merch-card-mini-compare-chart-icon-size: 32px;
+    --consonant-merch-card-mini-compare-mobile-cta-font-size: 15px;
+    --consonant-merch-card-mini-compare-mobile-cta-width: 75px;
+    --consonant-merch-card-mini-compare-badge-mobile-max-width: 50px;
+  }
+  
+  merch-card[variant="mini-compare-chart"] [slot="heading-m"] {
+    padding: 0 var(--consonant-merch-spacing-s) 0;
+  }
+
+  merch-card[variant="mini-compare-chart"] [slot="body-m"] {
+    padding: var(--consonant-merch-spacing-xs) var(--consonant-merch-spacing-s);
+  }
+
+  merch-card[variant="mini-compare-chart"] [is="inline-price"] {
+    display: inline-block;
+    min-height: 30px;
+    min-width: 1px;
+  }
+
+  merch-card[variant="mini-compare-chart"] [slot='callout-content'] {
+    padding: var(--consonant-merch-spacing-xs) var(--consonant-merch-spacing-s) 0px;
+  }
+
+  merch-card[variant="mini-compare-chart"] [slot='callout-content'] [is="inline-price"] {
+    min-height: unset;
+  }
+
+  merch-card[variant="mini-compare-chart"] [slot="price-commitment"] {
+    font-size: var(--consonant-merch-card-body-xs-font-size);
+    padding: 0 var(--consonant-merch-spacing-s);
+  }
+
+  merch-card[variant="mini-compare-chart"] [slot="price-commitment"] a {
+    display: inline-block;
+    height: 27px;
+  }
+
+  merch-card[variant="mini-compare-chart"] [slot="offers"] {
+    font-size: var(--consonant-merch-card-body-xs-font-size);
+  }
+
+  merch-card[variant="mini-compare-chart"] [slot="body-xxs"] {
+    font-size: var(--consonant-merch-card-body-xs-font-size);
+    padding: var(--consonant-merch-spacing-xs) var(--consonant-merch-spacing-s) 0;    
+  }
+
+  merch-card[variant="mini-compare-chart"] [slot="promo-text"] {
+    font-size: var(--consonant-merch-card-body-m-font-size);
+    padding: var(--consonant-merch-spacing-xs) var(--consonant-merch-spacing-s) 0;
+  }
+
+  merch-card[variant="mini-compare-chart"] [slot="promo-text"] a {
+    text-decoration: underline;
+  }
+
+  merch-card[variant="mini-compare-chart"] .footer-row-icon {
+    display: flex;
+    place-items: center;
+  }
+
+  merch-card[variant="mini-compare-chart"] .footer-row-icon img {
+    max-width: initial;
+    width: var(--consonant-merch-card-mini-compare-chart-icon-size);
+    height: var(--consonant-merch-card-mini-compare-chart-icon-size);
+  }
+
+  merch-card[variant="mini-compare-chart"] .footer-row-cell {
+    border-top: 1px solid var(--consonant-merch-card-border-color);
+    display: flex;
+    gap: var(--consonant-merch-spacing-xs);
+    justify-content: start;
+    place-items: center;
+    padding: var(--consonant-merch-spacing-xs) var(--consonant-merch-spacing-s);
+  }
+
+  merch-card[variant="mini-compare-chart"] .footer-row-cell-description {
+    font-size: var(--consonant-merch-card-body-s-font-size);
+    line-height: var(--consonant-merch-card-body-s-line-height);
+  }
+
+  merch-card[variant="mini-compare-chart"] .footer-row-cell-description p {
+    color: var(--merch-color-grey-80);
+    vertical-align: bottom;
+  }
+
+  merch-card[variant="mini-compare-chart"] .footer-row-cell-description a {
+    color: var(--color-accent);
+    text-decoration: solid;
+  }
+  
+.one-merch-card.mini-compare-chart {
+  grid-template-columns: var(--consonant-merch-card-mini-compare-chart-wide-width);
+  gap: var(--consonant-merch-spacing-xs);
+}
+
+.two-merch-cards.mini-compare-chart,
+.three-merch-cards.mini-compare-chart,
+.four-merch-cards.mini-compare-chart {
+  grid-template-columns: repeat(2, var(--consonant-merch-card-mini-compare-chart-width));
+  gap: var(--consonant-merch-spacing-xs);
+}
+
+/* mini compare mobile */ 
+@media screen and ${MOBILE_LANDSCAPE} {
+  :root {
+    --consonant-merch-card-mini-compare-chart-width: 302px;
+    --consonant-merch-card-mini-compare-chart-wide-width: 302px;
+  }
+
+  .two-merch-cards.mini-compare-chart,
+  .three-merch-cards.mini-compare-chart,
+  .four-merch-cards.mini-compare-chart {
+    grid-template-columns: var(--consonant-merch-card-mini-compare-chart-width);
+    gap: var(--consonant-merch-spacing-xs);
+  }
+
+  merch-card[variant="mini-compare-chart"] [slot='heading-m'] {
+    font-size: var(--consonant-merch-card-body-s-font-size);
+    line-height: var(--consonant-merch-card-body-s-line-height);
+  }
+
+  merch-card[variant="mini-compare-chart"] [slot='heading-m-price'] {
+    font-size: var(--consonant-merch-card-body-s-font-size);
+    line-height: var(--consonant-merch-card-body-s-line-height);
+  }
+
+  merch-card[variant="mini-compare-chart"] [slot='body-m'] {
+    font-size: var(--consonant-merch-card-body-xs-font-size);
+    line-height: var(--consonant-merch-card-body-xs-line-height);
+  }
+  
+  merch-card[variant="mini-compare-chart"] [slot="promo-text"] {
+    font-size: var(--consonant-merch-card-body-xs-font-size);
+    line-height: var(--consonant-merch-card-body-xs-line-height);
+  }
+  merch-card[variant="mini-compare-chart"] .footer-row-cell-description {
+    font-size: var(--consonant-merch-card-body-xs-font-size);
+    line-height: var(--consonant-merch-card-body-xs-line-height);
+  }
+}
+
+@media screen and ${TABLET_DOWN} {
+  .three-merch-cards.mini-compare-chart merch-card [slot="footer"] a,
+  .four-merch-cards.mini-compare-chart merch-card [slot="footer"] a {
+    flex: 1;
+  }
+
+  merch-card[variant="mini-compare-chart"] [slot='heading-m'] {
+    font-size: var(--consonant-merch-card-body-s-font-size);
+    line-height: var(--consonant-merch-card-body-s-line-height);
+  }
+
+  merch-card[variant="mini-compare-chart"] [slot='heading-m-price'] {
+    font-size: var(--consonant-merch-card-body-s-font-size);
+    line-height: var(--consonant-merch-card-body-s-line-height);
+  }
+
+  merch-card[variant="mini-compare-chart"] [slot='body-m'] {
+    font-size: var(--consonant-merch-card-body-xs-font-size);
+    line-height: var(--consonant-merch-card-body-xs-line-height);
+  }
+
+  merch-card[variant="mini-compare-chart"] [slot="promo-text"] {
+    font-size: var(--consonant-merch-card-body-xs-font-size);
+    line-height: var(--consonant-merch-card-body-xs-line-height);
+  }
+  
+  merch-card[variant="mini-compare-chart"] .footer-row-cell-description {
+    font-size: var(--consonant-merch-card-body-xs-font-size);
+    line-height: var(--consonant-merch-card-body-xs-line-height);
+  }
+}
+@media screen and ${TABLET_UP} {
+  :root {
+    --consonant-merch-card-mini-compare-chart-width: 302px;
+    --consonant-merch-card-mini-compare-chart-wide-width: 302px;
+  }
+
+  .two-merch-cards.mini-compare-chart {
+    grid-template-columns: repeat(2, minmax(var(--consonant-merch-card-mini-compare-chart-width), var(--consonant-merch-card-mini-compare-chart-wide-width)));
+    gap: var(--consonant-merch-spacing-m);
+  }
+
+  .three-merch-cards.mini-compare-chart,
+  .four-merch-cards.mini-compare-chart {
+      grid-template-columns: repeat(2, minmax(var(--consonant-merch-card-mini-compare-chart-width), var(--consonant-merch-card-mini-compare-chart-wide-width)));
+  }
+}
+
+/* desktop */
+@media screen and ${DESKTOP_UP} {
+  :root {
+    --consonant-merch-card-mini-compare-chart-width: 378px;
+    --consonant-merch-card-mini-compare-chart-wide-width: 484px;  
+  }
+  .one-merch-card.mini-compare-chart {
+    grid-template-columns: var(--consonant-merch-card-mini-compare-chart-wide-width);
+  }
+
+  .two-merch-cards.mini-compare-chart {
+    grid-template-columns: repeat(2, var(--consonant-merch-card-mini-compare-chart-wide-width));
+    gap: var(--consonant-merch-spacing-m);
+  }
+
+  .three-merch-cards.mini-compare-chart,
+  .four-merch-cards.mini-compare-chart {
+    grid-template-columns: repeat(3, var(--consonant-merch-card-mini-compare-chart-width));
+    gap: var(--consonant-merch-spacing-m);
+  }
+}
+
+@media screen and ${LARGE_DESKTOP} {
+  .four-merch-cards.mini-compare-chart {
+      grid-template-columns: repeat(4, var(--consonant-merch-card-mini-compare-chart-width));
+  }
+}
+
+merch-card .footer-row-cell:nth-child(1) {
+  min-height: var(--consonant-merch-card-footer-row-1-min-height);
+}
+
+merch-card .footer-row-cell:nth-child(2) {
+  min-height: var(--consonant-merch-card-footer-row-2-min-height);
+}
+
+merch-card .footer-row-cell:nth-child(3) {
+  min-height: var(--consonant-merch-card-footer-row-3-min-height);
+}
+
+merch-card .footer-row-cell:nth-child(4) {
+  min-height: var(--consonant-merch-card-footer-row-4-min-height);
+}
+
+merch-card .footer-row-cell:nth-child(5) {
+  min-height: var(--consonant-merch-card-footer-row-5-min-height);
+}
+
+merch-card .footer-row-cell:nth-child(6) {
+  min-height: var(--consonant-merch-card-footer-row-6-min-height);
+}
+
+merch-card .footer-row-cell:nth-child(7) {
+  min-height: var(--consonant-merch-card-footer-row-7-min-height);
+}
+
+merch-card .footer-row-cell:nth-child(8) {
+  min-height: var(--consonant-merch-card-footer-row-8-min-height);
+}
+`;
+
+// src/variants/mini-compare-chart.js
+var FOOTER_ROW_MIN_HEIGHT = 32;
+var MiniCompareChart = class extends VariantLayout {
+  constructor(card) {
+    super(card);
+  }
+  #container;
+  getRowMinHeightPropertyName = (index) => `--consonant-merch-card-footer-row-${index}-min-height`;
+  getContainer() {
+    this.#container = this.#container ?? this.card.closest('[class*="-merch-cards"]') ?? this.card.parentElement;
+    return this.#container;
+  }
+  static getGlobalCSS() {
+    return CSS6;
+  }
+  getMiniCompareFooter = () => {
+    const secureLabel = this.card.secureLabel ? html6`<slot name="secure-transaction-label">
+              <span class="secure-transaction-label"
+                  >${this.card.secureLabel}</span
+              ></slot
+          >` : html6`<slot name="secure-transaction-label"></slot>`;
+    return html6`<footer>${secureLabel}<slot name="footer"></slot></footer>`;
+  };
+  updateMiniCompareElementMinHeight(el, name) {
+    const elMinHeightPropertyName = `--consonant-merch-card-mini-compare-${name}-height`;
+    const height = Math.max(
+      0,
+      parseInt(window.getComputedStyle(el).height) || 0
+    );
+    const maxMinHeight = parseInt(
+      this.getContainer().style.getPropertyValue(elMinHeightPropertyName)
+    ) || 0;
+    if (height > maxMinHeight) {
+      this.getContainer().style.setProperty(
+        elMinHeightPropertyName,
+        `${height}px`
+      );
+    }
+  }
+  adjustMiniCompareBodySlots() {
+    if (this.card.getBoundingClientRect().width === 0)
+      return;
+    this.updateMiniCompareElementMinHeight(
+      this.card.shadowRoot.querySelector(".top-section"),
+      "top-section"
+    );
+    const slots = [
+      "heading-m",
+      "body-m",
+      "heading-m-price",
+      "price-commitment",
+      "offers",
+      "promo-text",
+      "callout-content",
+      "secure-transaction-label"
+    ];
+    slots.forEach(
+      (slot) => this.updateMiniCompareElementMinHeight(
+        this.card.shadowRoot.querySelector(`slot[name="${slot}"]`),
+        slot
+      )
+    );
+    this.updateMiniCompareElementMinHeight(
+      this.card.shadowRoot.querySelector("footer"),
+      "footer"
+    );
+    const badge = this.card.shadowRoot.querySelector(
+      ".mini-compare-chart-badge"
+    );
+    if (badge && badge.textContent !== "") {
+      this.getContainer().style.setProperty(
+        "--consonant-merch-card-mini-compare-top-section-mobile-height",
+        "32px"
+      );
+    }
+  }
+  adjustMiniCompareFooterRows() {
+    if (this.card.getBoundingClientRect().width === 0)
+      return;
+    const footerRows = this.card.querySelector('[slot="footer-rows"]');
+    [...footerRows.children].forEach((el, index) => {
+      const height = Math.max(
+        FOOTER_ROW_MIN_HEIGHT,
+        parseInt(window.getComputedStyle(el).height) || 0
+      );
+      const maxMinHeight = parseInt(
+        this.getContainer().style.getPropertyValue(
+          this.getRowMinHeightPropertyName(index + 1)
+        )
+      ) || 0;
+      if (height > maxMinHeight) {
+        this.getContainer().style.setProperty(
+          this.getRowMinHeightPropertyName(index + 1),
+          `${height}px`
+        );
+      }
+    });
+  }
+  removeEmptyRows() {
+    const footerRows = this.card.querySelectorAll(".footer-row-cell");
+    footerRows.forEach((row) => {
+      const rowDescription = row.querySelector(".footer-row-cell-description");
+      if (rowDescription) {
+        const isEmpty = !rowDescription.textContent.trim();
+        if (isEmpty) {
+          row.remove();
+        }
+      }
+    });
+  }
+  renderLayout() {
+    return html6` <div class="top-section${this.badge ? " badge" : ""}">
+            <slot name="icons"></slot> ${this.badge}
+        </div>
+        <slot name="heading-m"></slot>
+        <slot name="body-m"></slot>
+        <slot name="heading-m-price"></slot>
+        <slot name="body-xxs"></slot>
+        <slot name="price-commitment"></slot>
+        <slot name="offers"></slot>
+        <slot name="promo-text"></slot>
+        <slot name="callout-content"></slot>
+        ${this.getMiniCompareFooter()}
+        <slot name="footer-rows"><slot name="body-s"></slot></slot>`;
+  }
+  postCardUpdateHook() {
+    if (!isMobile()) {
+      this.adjustMiniCompareBodySlots();
+      this.adjustMiniCompareFooterRows();
+    } else {
+      this.removeEmptyRows();
+    }
+  }
+  static variantStyle = css3`
+    :host([variant='mini-compare-chart']) > slot:not([name='icons']) {
+        display: block;
+    }
+    :host([variant='mini-compare-chart']) footer {
+        min-height: var(--consonant-merch-card-mini-compare-footer-height);
+        padding: var(--consonant-merch-spacing-xs);
+    }
+
+    /* mini-compare card  */
+    :host([variant='mini-compare-chart']) .top-section {
+        padding-top: var(--consonant-merch-spacing-s);
+        padding-inline-start: var(--consonant-merch-spacing-s);
+        height: var(--consonant-merch-card-mini-compare-top-section-height);
+    }
+
+    @media screen and ${unsafeCSS(TABLET_DOWN)} {
+        [class*'-merch-cards'] :host([variant='mini-compare-chart']) footer {
+            flex-direction: column;
+            align-items: stretch;
+            text-align: center;
+        }
+    }
+
+    @media screen and ${unsafeCSS(DESKTOP_UP)} {
+        :host([variant='mini-compare-chart']) footer {
+            padding: var(--consonant-merch-spacing-xs)
+                var(--consonant-merch-spacing-s)
+                var(--consonant-merch-spacing-s)
+                var(--consonant-merch-spacing-s);
+        }
+    }
+
+    :host([variant='mini-compare-chart']) slot[name='footer-rows'] {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: end;
+    }
+    /* mini-compare card heights for the slots: heading-m, body-m, heading-m-price, price-commitment, offers, promo-text, footer */
+    :host([variant='mini-compare-chart']) slot[name='heading-m'] {
+        min-height: var(--consonant-merch-card-mini-compare-heading-m-height);
+    }
+    :host([variant='mini-compare-chart']) slot[name='body-m'] {
+        min-height: var(--consonant-merch-card-mini-compare-body-m-height);
+    }
+    :host([variant='mini-compare-chart']) slot[name='heading-m-price'] {
+        min-height: var(
+            --consonant-merch-card-mini-compare-heading-m-price-height
+        );
+    }
+    :host([variant='mini-compare-chart']) slot[name='price-commitment'] {
+        min-height: var(
+            --consonant-merch-card-mini-compare-price-commitment-height
+        );
+    }
+    :host([variant='mini-compare-chart']) slot[name='offers'] {
+        min-height: var(--consonant-merch-card-mini-compare-offers-height);
+    }
+    :host([variant='mini-compare-chart']) slot[name='promo-text'] {
+        min-height: var(--consonant-merch-card-mini-compare-promo-text-height);
+    }
+    :host([variant='mini-compare-chart']) slot[name='callout-content'] {
+        min-height: var(
+            --consonant-merch-card-mini-compare-callout-content-height
+        );
+    }
+  `;
+};
+
+// src/variants/plans.js
+import { html as html7, css as css4 } from "/libs/deps/lit-all.min.js";
+
+// src/variants/plans.css.js
+var CSS7 = `
+:root {
+  --consonant-merch-card-plans-width: 300px;
+  --consonant-merch-card-plans-icon-size: 40px;
+}
+  
+merch-card[variant="plans"] [slot="description"] {
+  min-height: 84px;
+}
+
+merch-card[variant="plans"] [slot="quantity-select"] {
+  display: flex;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--consonant-merch-spacing-xs);
+}
+
+.one-merch-card.plans,
+.two-merch-cards.plans,
+.three-merch-cards.plans,
+.four-merch-cards.plans {
+    grid-template-columns: var(--consonant-merch-card-plans-width);
+}
+
+/* Tablet */
+@media screen and ${TABLET_UP} {
+  :root {
+    --consonant-merch-card-plans-width: 302px;
+  }
+  .two-merch-cards.plans,
+  .three-merch-cards.plans,
+  .four-merch-cards.plans {
+      grid-template-columns: repeat(2, var(--consonant-merch-card-plans-width));
+  }
+}
+
+/* desktop */
+@media screen and ${DESKTOP_UP} {
+  :root {
+    --consonant-merch-card-plans-width: 276px;
+  }
+  .three-merch-cards.plans,
+  .four-merch-cards.plans {
+      grid-template-columns: repeat(3, var(--consonant-merch-card-plans-width));
+  }
+}
+
+/* Large desktop */
+    @media screen and ${LARGE_DESKTOP} {
+    .four-merch-cards.plans {
+        grid-template-columns: repeat(4, var(--consonant-merch-card-plans-width));
+    }
+}
+`;
+
+// src/variants/plans.js
+var Plans = class extends VariantLayout {
+  constructor(card) {
+    super(card);
+  }
+  static getGlobalCSS() {
+    return CSS7;
+  }
+  postCardUpdateHook() {
+    this.adjustTitleWidth();
+  }
+  get stockCheckbox() {
+    return this.checkboxLabel ? html7`<label id="stock-checkbox">
+                <input type="checkbox" @change=${this.card.toggleStockOffer}></input>
+                <span></span>
+                ${this.card.checkboxLabel}
+            </label>` : "";
+  }
+  renderLayout() {
+    return html7` ${this.badge}
+        <div class="body">
+            <slot name="icons"></slot>
+            <slot name="heading-xs"></slot>
+            <slot name="heading-m"></slot>
+            <slot name="body-xxs"></slot>
+            ${!this.promoBottom ? html7`<slot name="promo-text"></slot><slot name="callout-content"></slot> ` : ""}
+            <slot name="body-xs"></slot>
+            ${this.promoBottom ? html7`<slot name="promo-text"></slot><slot name="callout-content"></slot> ` : ""}  
+            ${this.stockCheckbox}
+        </div>
+        <slot name="quantity-select"></slot>
+        ${this.secureLabelFooter}`;
+  }
+  static variantStyle = css4`
+    :host([variant='plans']) {
+      min-height: 348px;
+    }
+    :host([variant='plans']) ::slotted([slot='heading-xs']),
+      max-width: var(--consonant-merch-card-heading-xs-max-width, 100%);
+    }
+  `;
+};
+
+// src/variants/product.js
+import { html as html8 } from "/libs/deps/lit-all.min.js";
+
+// src/variants/product.css.js
+var CSS8 = `
+:root {
+  --consonant-merch-card-product-width: 300px;
+}
+
+/* grid style for product */
+.one-merch-card.product,
+.two-merch-cards.product,
+.three-merch-cards.product,
+.four-merch-cards.product {
+    grid-template-columns: var(--consonant-merch-card-product-width);
+}
+
+/* Tablet */
+@media screen and ${TABLET_UP} {
+    .two-merch-cards.product,
+    .three-merch-cards.product,
+    .four-merch-cards.product {
+        grid-template-columns: repeat(2, var(--consonant-merch-card-product-width));
+    }
+}
+
+/* desktop */
+@media screen and ${DESKTOP_UP} {
+  :root {
+    --consonant-merch-card-product-width: 378px;
+  }
+  .three-merch-cards.product,
+  .four-merch-cards.product {
+      grid-template-columns: repeat(3, var(--consonant-merch-card-product-width));
+  }
+}
+
+/* Large desktop */
+@media screen and ${LARGE_DESKTOP} {
+  .four-merch-cards.product {
+      grid-template-columns: repeat(4, var(--consonant-merch-card-product-width));
+  }
+}
+`;
+
+// src/variants/product.js
+var Product = class extends VariantLayout {
+  constructor(card) {
+    super(card);
+  }
+  static getGlobalCSS() {
+    return CSS8;
+  }
+  renderLayout() {
+    return html8` ${this.badge}
+      <div class="body">
+          <slot name="icons"></slot>
+          <slot name="heading-xs"></slot>
+          <slot name="body-xxs"></slot>
+          ${!this.promoBottom ? html8`<slot name="promo-text"></slot><slot name="callout-content"></slot>` : ""}
+          <slot name="body-xs"></slot>
+          ${this.promoBottom ? html8`<slot name="promo-text"></slot><slot name="callout-content"></slot>` : ""}
+      </div>
+      ${this.secureLabelFooter}`;
+  }
+};
+
+// src/variants/segment.js
+import { html as html9, css as css5 } from "/libs/deps/lit-all.min.js";
+
+// src/variants/segment.css.js
+var CSS9 = `
+:root {
+  --consonant-merch-card-segment-width: 378px;
+}
+
+/* grid style for segment */
+.one-merch-card.segment,
+.two-merch-cards.segment,
+.three-merch-cards.segment,
+.four-merch-cards.segment {
+  grid-template-columns: minmax(276px, var(--consonant-merch-card-segment-width));
+}
+
+/* Mobile */
+@media screen and ${MOBILE_LANDSCAPE} {
+  :root {
+    --consonant-merch-card-segment-width: 276px;
+  }
+}
+
+@media screen and ${TABLET_UP} {
+  :root {
+    --consonant-merch-card-segment-width: 276px;
+  }
+  .two-merch-cards.segment,
+  .three-merch-cards.segment,
+  .four-merch-cards.segment {
+      grid-template-columns: repeat(2, minmax(276px, var(--consonant-merch-card-segment-width)));
+  }
+}
+
+/* desktop */
+@media screen and ${DESKTOP_UP} {
+  :root {
+    --consonant-merch-card-segment-width: 302px;
+  }
+  .three-merch-cards.segment {
+      grid-template-columns: repeat(3, minmax(276px, var(--consonant-merch-card-segment-width)));
+  }
+
+  .four-merch-cards.segment {
+      grid-template-columns: repeat(4, minmax(276px, var(--consonant-merch-card-segment-width)));
+  }
+}
+`;
+
+// src/variants/segment.js
+var Segment = class extends VariantLayout {
+  constructor(card) {
+    super(card);
+  }
+  static getGlobalCSS() {
+    return CSS9;
+  }
+  postCardUpdateHook() {
+    this.adjustTitleWidth();
+  }
+  renderLayout() {
+    return html9` ${this.badge}
+    <div class="body">
+        <slot name="heading-xs"></slot>
+        <slot name="body-xxs"></slot>
+        ${!this.promoBottom ? html9`<slot name="promo-text"></slot><slot name="callout-content"></slot>` : ""}
+        <slot name="body-xs"></slot>
+        ${this.promoBottom ? html9`<slot name="promo-text"></slot><slot name="callout-content"></slot>` : ""}
+    </div>
+    <hr />
+    ${this.secureLabelFooter}`;
+  }
+  static variantStyle = css5`
+    :host([variant='segment']) {
+      min-height: 214px;
+    }
+    :host([variant='segment']) ::slotted([slot='heading-xs']) {
+      max-width: var(--consonant-merch-card-heading-xs-max-width, 100%);
+    }
+  `;
+};
+
+// src/variants/special-offer.js
+import { html as html10, css as css6 } from "/libs/deps/lit-all.min.js";
+
+// src/variants/special-offer.css.js
+var CSS10 = `
+:root {
+  --consonant-merch-card-special-offers-width: 378px;
+}
+
+merch-card[variant="special-offers"] span[is="inline-price"][data-template="strikethrough"] {
+  font-size: var(--consonant-merch-card-body-xs-font-size);
+}
+
+/* grid style for special-offers */
+.one-merch-card.special-offers,
+.two-merch-cards.special-offers,
+.three-merch-cards.special-offers,
+.four-merch-cards.special-offers {
+  grid-template-columns: minmax(300px, var(--consonant-merch-card-special-offers-width));
+}
+
+@media screen and ${MOBILE_LANDSCAPE} {
+  :root\xA0{
+    --consonant-merch-card-special-offers-width: 302px;
+  }
+} 
+  
+@media screen and ${TABLET_UP} {
+  :root {
+    --consonant-merch-card-special-offers-width: 302px;
+  }
+  .two-merch-cards.special-offers,
+  .three-merch-cards.special-offers,
+  .four-merch-cards.special-offers {
+      grid-template-columns: repeat(2, minmax(300px, var(--consonant-merch-card-special-offers-width)));
+  }
+}
+
+/* desktop */
+@media screen and ${DESKTOP_UP} {
+  .three-merch-cards.special-offers,
+  .four-merch-cards.special-offers {
+    grid-template-columns: repeat(3, minmax(300px, var(--consonant-merch-card-special-offers-width)));
+  }
+}
+
+@media screen and ${LARGE_DESKTOP} {
+  .four-merch-cards.special-offers {
+    grid-template-columns: repeat(4, minmax(300px, var(--consonant-merch-card-special-offers-width)));
+  }
+}
+`;
+
+// src/variants/special-offer.js
+var SpecialOffer = class extends VariantLayout {
+  constructor(card) {
+    super(card);
+  }
+  static getGlobalCSS() {
+    return CSS10;
+  }
+  renderLayout() {
+    return html10`${this.cardImage}
+          <div class="body">
+              <slot name="detail-m"></slot>
+              <slot name="heading-xs"></slot>
+              <slot name="body-xs"></slot>
+          </div>
+          ${this.evergreen ? html10`
+                    <div
+                        class="detail-bg-container"
+                        style="background: ${this.card["detailBg"]}"
+                    >
+                        <slot name="detail-bg"></slot>
+                    </div>
+                ` : html10`
+                    <hr />
+                    ${this.secureLabelFooter}
+                `}`;
+  }
+  static variantStyle = css6`
+    :host([variant='special-offers']) {
+      min-height: 439px;
+    }
+    :host([variant='special-offers'].center) {
+      text-align: center;
+    }  
+  `;
+};
+
+// src/variants/twp.js
+import { html as html11, css as css7 } from "/libs/deps/lit-all.min.js";
+
+// src/variants/twp.css.js
+var CSS11 = `
+:root {
+  --consonant-merch-card-twp-width: 268px;
+  --consonant-merch-card-twp-mobile-width: 300px;
+  --consonant-merch-card-twp-mobile-height: 358px;
+}
+merch-card[variant="twp"] div[class$='twp-badge'] {
+  padding: 4px 10px 5px 10px;
+}
+
+merch-card[variant="twp"] [slot="body-xs-top"] {
+  font-size: var(--consonant-merch-card-body-xs-font-size);
+  line-height: var(--consonant-merch-card-body-xs-line-height);
+  color: var(--merch-color-grey-80);
+}
+
+merch-card[variant="twp"] [slot="body-xs"] ul {
+  padding: 0;
+  margin: 0;
+}
+
+merch-card[variant="twp"] [slot="body-xs"] ul li {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+merch-card[variant="twp"] [slot="body-xs"] ul li::before {
+  content: '\xB7';
+  font-size: 20px;
+  padding-right: 5px;
+  font-weight: bold;
+}
+
+merch-card[variant="twp"] [slot="footer"] {
+  font-size: var(--consonant-merch-card-body-xs-font-size);
+  line-height: var(--consonant-merch-card-body-xs-line-height);
+  padding: var(--consonant-merch-spacing-s)
+  var(--consonant-merch-spacing-xs) var(--consonant-merch-spacing-xs);
+  color: var(--merch-color-grey-80);
+  display: flex;
+  flex-flow: wrap;
+}
+
+merch-card[variant='twp'] merch-quantity-select,
+merch-card[variant='twp'] merch-offer-select {
+  display: none;
+}
+
+.one-merch-card.twp,
+.two-merch-cards.twp,
+.three-merch-cards.twp {
+  grid-template-columns: var(--consonant-merch-card-image-width);
+}
+
+@media screen and ${DESKTOP_UP} {
+  :root {
+    --consonant-merch-card-twp-width: 268px;
+  }
+  .one-merch-card.twp
+  .two-merch-cards.twp {
+      grid-template-columns: repeat(2, var(--consonant-merch-card-twp-width));
+  }
+  .three-merch-cards.twp {
+      grid-template-columns: repeat(3, var(--consonant-merch-card-twp-width));
+  }
+}
+
+@media screen and ${LARGE_DESKTOP} {
+    .one-merch-card.twp
+    .two-merch-cards.twp {
+        grid-template-columns: repeat(2, var(--consonant-merch-card-twp-width));
+    }
+    .three-merch-cards.twp {
+    grid-template-columns: repeat(3, var(--consonant-merch-card-twp-width));
+  }
+}
+
+@media screen and ${MOBILE_LANDSCAPE} {
+  :root {
+    --consonant-merch-card-twp-width: 300px;
+  }
+  .one-merch-card.twp,
+  .two-merch-cards.twp,
+  .three-merch-cards.twp {
+      grid-template-columns: repeat(1, var(--consonant-merch-card-twp-mobile-width));
+  }
+}
+
+@media screen and ${TABLET_UP} {
+  :root {
+    --consonant-merch-card-twp-width: 268px;
+  }
+  .one-merch-card.twp,
+  .two-merch-cards.twp {
+      grid-template-columns: repeat(2, var(--consonant-merch-card-twp-width));
+  }
+  .three-merch-cards.twp {
+      grid-template-columns: repeat(3, var(--consonant-merch-card-twp-width));
+  }
+}
+`;
+
+// src/variants/twp.js
+var TWP = class extends VariantLayout {
+  constructor(card) {
+    super(card);
+  }
+  static getGlobalCSS() {
+    return CSS11;
+  }
+  renderLayout() {
+    return html11`${this.badge}
+      <div class="top-section">
+          <slot name="icons"></slot>
+          <slot name="heading-xs"></slot>
+          <slot name="body-xs-top"></slot>
+      </div>
+      <div class="body">
+          <slot name="body-xs"></slot>
+      </div>
+      <footer><slot name="footer"></slot></footer>`;
+  }
+  static variantStyle = css7`
+    :host([variant='twp']) {
+      padding: 4px 10px 5px 10px;
+    }
+    .twp-badge {
+      padding: 4px 10px 5px 10px;
+    }
+
+    :host([variant='twp']) ::slotted(merch-offer-select) {
+      display: none;
+    }
+
+    :host([variant='twp']) .top-section {
+      flex: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      height: 100%;
+      gap: var(--consonant-merch-spacing-xxs);
+      padding: var(--consonant-merch-spacing-xs)
+          var(--consonant-merch-spacing-xs) var(--consonant-merch-spacing-xs)
+          var(--consonant-merch-spacing-xs);
+      align-items: flex-start;
+    }
+
+    :host([variant='twp']) .body {
+      padding: 0 var(--consonant-merch-spacing-xs);
+    }
+    
+    :host([aria-selected]) .twp-badge {
+        margin-inline-end: 2px;
+        padding-inline-end: 9px;
+    }
+
+    :host([variant='twp']) footer {
+      gap: var(--consonant-merch-spacing-xxs);
+      flex-direction: column;
+      align-self: flex-start;
+    }
+  `;
+};
+
+// src/variants/variants.js
+var getVariantGlobalCss = () => {
+  return `
+    ${Catalog.getGlobalCSS()}${CCDAction.getGlobalCSS()}${Image.getGlobalCSS()}
+    ${InlineHeading.getGlobalCSS()}${MiniCompareChart.getGlobalCSS()}
+    ${Plans.getGlobalCSS()}${Product.getGlobalCSS()}${Segment.getGlobalCSS()}
+    ${SpecialOffer.getGlobalCSS()}${TWP.getGlobalCSS()}
+  `;
+};
+
 // src/global.css.js
 var styles = document.createElement("style");
 styles.innerHTML = `
@@ -5350,12 +6791,13 @@ body.merch-modal {
     scrollbar-gutter: stable;
     height: 100vh;
 }
+${getVariantGlobalCss()}
 `;
 document.head.appendChild(styles);
 
 // src/plans-modal.css.js
-import { css } from "/libs/deps/lit-all.min.js";
-var styles2 = css`
+import { css as css8 } from "/libs/deps/lit-all.min.js";
+var styles2 = css8`
     :host {
         --consonant-plan-modal-includes: hidden;
     }
@@ -5487,9 +6929,6 @@ var styles2 = css`
 `;
 var plans_modal_css_default = styles2;
 
-// src/media.js
-var MOBILE_LANDSCAPE = "(max-width: 767px)";
-
 // src/plans-modal.js
 var PlansModal = class extends LitElement {
   static properties = {
@@ -5524,7 +6963,7 @@ var PlansModal = class extends LitElement {
     this.seeMoreText = " + See more";
   }
   render() {
-    return html`
+    return html12`
             <sp-theme theme="spectrum" color="light" scale="large">
                 <sp-dialog-wrapper
                     slot="click-content"
@@ -5593,7 +7032,7 @@ var PlansModal = class extends LitElement {
     this.style.setProperty("--consonant-plan-modal-includes", "auto");
   }
   get seeMoreButton() {
-    return this.hideSeeMoreButton ? void 0 : html`
+    return this.hideSeeMoreButton ? void 0 : html12`
                   <sp-button
                       id="seeMore"
                       size="s"

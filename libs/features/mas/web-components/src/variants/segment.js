@@ -7,7 +7,7 @@ export class Segment extends VariantLayout {
     super(card);
   }
 
-  getGlobalCSS() {
+  static getGlobalCSS() {
     return CSS;
   }
 

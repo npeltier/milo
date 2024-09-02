@@ -7,7 +7,7 @@ export class TWP extends VariantLayout {
     super(card);
   }
 
-  getGlobalCSS() {
+  static getGlobalCSS() {
     return CSS;
   }
 

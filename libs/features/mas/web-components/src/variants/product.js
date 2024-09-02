@@ -7,7 +7,7 @@ export class Product extends VariantLayout {
     super(card);
   }
 
-  getGlobalCSS() {
+  static getGlobalCSS() {
     return CSS;
   }
 

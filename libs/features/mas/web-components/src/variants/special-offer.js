@@ -7,7 +7,7 @@ export class SpecialOffer extends VariantLayout {
     super(card);
   }
 
-  getGlobalCSS() {
+  static getGlobalCSS() {
     return CSS;
   }
   
