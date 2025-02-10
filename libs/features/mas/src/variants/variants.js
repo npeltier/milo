@@ -14,6 +14,11 @@ import {
     CCD_SUGGESTED_AEM_FRAGMENT_MAPPING,
     CCDSuggested,
 } from './ccd-suggested.js';
+import {
+    CO_ADDON_MAPPING,
+    COAddon,
+} from './co-addon.js';
+
 import { CCD_SLICE_AEM_FRAGMENT_MAPPING, CCDSlice } from './ccd-slice.js';
 
 const getVariantLayout = (card, mustMatch = false) => {
@@ -40,6 +45,8 @@ const getVariantLayout = (card, mustMatch = false) => {
             return new CCDSuggested(card);
         case 'ccd-slice':
             return new CCDSlice(card);
+        case 'co-addon':
+          return new COAddon(card);
         default:
             return mustMatch ? undefined : new Product(card);
     }
@@ -57,6 +64,7 @@ export const variantFragmentMappings = {
     twp: null,
     'ccd-suggested': CCD_SUGGESTED_AEM_FRAGMENT_MAPPING,
     'ccd-slice': CCD_SLICE_AEM_FRAGMENT_MAPPING,
+    'co-addon': CO_ADDON_MAPPING,
 };
 
 const getVariantStyles = () => {
@@ -70,6 +78,7 @@ const getVariantStyles = () => {
     styles.push(TWP.variantStyle);
     styles.push(CCDSuggested.variantStyle);
     styles.push(CCDSlice.variantStyle);
+    styles.push(COAddon.variantStyle);
     return styles;
 };
 

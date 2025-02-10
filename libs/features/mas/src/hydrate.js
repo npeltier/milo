@@ -39,16 +39,16 @@ export function processMnemonics(fields, merchCard, mnemonicsConfig) {
     });
 }
 
-function processBadge(fields, merchCard) {
+function processBadge(fields, merchCard, badgeConfig) {
     if (fields.badge) {
         merchCard.setAttribute('badge-text', fields.badge);
         merchCard.setAttribute(
             'badge-color',
-            fields.badgeColor || DEFAULT_BADGE_COLOR,
+            fields.badgeColor || badgeConfig?.color || DEFAULT_BADGE_COLOR,
         );
         merchCard.setAttribute(
             'badge-background-color',
-            fields.badgeBackgroundColor || DEFAULT_BADGE_BACKGROUND_COLOR,
+            fields.badgeBackgroundColor || badgeConfig?.backgroundColor || DEFAULT_BADGE_BACKGROUND_COLOR,
         );
     }
 }
@@ -301,7 +301,7 @@ export async function hydrate(fragment, merchCard) {
     if (!aemFragmentMapping) return;
 
     processMnemonics(fields, merchCard, aemFragmentMapping.mnemonics);
-    processBadge(fields, merchCard);
+    processBadge(fields, merchCard, aemFragmentMapping.badge);
     processSize(fields, merchCard, aemFragmentMapping.size);
     processTitle(fields, merchCard, aemFragmentMapping.title);
     processSubtitle(fields, merchCard, aemFragmentMapping.subtitle);
