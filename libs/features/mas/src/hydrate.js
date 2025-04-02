@@ -168,7 +168,7 @@ export function processDescription(fields, merchCard, mapping) {
 
 export function processStockOffersAndSecureLabel(fields, merchCard, aemFragmentMapping, settings) {
   // for Stock Checkbox, presence flag is set on the card, label and osi for an offer are set in settings
-  if (fields.showStockCheckbox && aemFragmentMapping.stockOffer) {
+  if (fields.showAddonCheckbox && aemFragmentMapping.stockOffer) {
     merchCard.setAttribute('checkbox-label', settings.stockCheckboxLabel);
     merchCard.setAttribute('stock-offer-osis', settings.stockOfferOsis);
   }

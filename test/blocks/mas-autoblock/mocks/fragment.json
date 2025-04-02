@@ -29,7 +29,7 @@
     "shortDescription": {
       "mimeType": "text/html"
     },
-    "showStockCheckbox": true,
+    "showAddonCheckbox": true,
     "tags": [],
     "variant": "plans"
   },
