@@ -14,7 +14,7 @@ import {
   MAS_MERCH_SIDENAV,
 } from '../merch/merch.js';
 
-const DEPS_TIMEOUT = 10000;
+const DEPS_TIMEOUT = 15000;
 const DEFAULT_OPTIONS = { sidenav: true };
 
 // Map of single_app values to their corresponding filter values
